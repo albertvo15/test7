@@ -1,0 +1,57 @@
+#!/usr/bin/python
+
+import os
+import subprocess
+import datetime
+import re
+
+path = '/bigdata.SAVE/'
+pathout = '/var/backup/bigdata/'
+
+msgpathout = '/var/log/bigdata-backup.log'
+
+cmd = 'tar -cvf ' + ' ' + pathout + 'bigdata.tar' + ' ' + path
+proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True)
+(out,err) = proc.communicate()
+
+cmd = 'gzip ' + ' ' + pathout + 'bigdata.tar' 
+proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True)
+(out,err) = proc.communicate()
+
+cmd = 'ls -l /var/backup/bigdata/bigdata.tar.gz  | cut -d " "  -f 5,9'
+proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True)
+(out,err) = proc.communicate()
+
+cmdout = out
+#print 'cmdout = ' + cmdout
+
+(backsize,backtime) = re.split(' ',cmdout)
+#print 'backtime = ' + backtime
+mybacktime = backtime.strip()
+#print 'backsize = ' + backsize
+mybacksize = backsize
+
+timenow = str(datetime.datetime.now())
+#timenow = datetime.datetime.now()
+
+(date,mytime) = re.split(' ', timenow,1)
+(hour,min,sec) = re.split(':', mytime)
+
+ihour = int(hour)
+AMPM = 'AM'
+if ihour <= 12:
+  AMPM = 'AM'
+if ihour > 12:
+  AMPM = 'PM'
+
+
+logmsg = 'Backup completed at ' + mybacktime + ' ' + AMPM + ' with a size of ' + mybacksize + ' bytes'
+#logmsg = 'Backup completed at ' + backtime  + ' with a size of ' + mybacksize + ' bytes'
+
+#print logmsg
+#logmsg = 'Backup completed at ' + hour + ':' + min + ' ' + AMPM + ' with a size of XX bytes'
+#logmsg = 'Backup completed at ' + now + ' with a size of XX bytes'
+#logmsg = 'Backup completed at X:XX PM with a size of XX bytes'
+cmd5 = 'echo ' + logmsg + ' >> ' + msgpathout  
+proc = subprocess.Popen(cmd5, stdout=subprocess.PIPE,shell=True)
+(out,err) = proc.communicate()

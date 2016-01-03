@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+import os
+import re
+import os
+import sys
+import fileinput
+import argparse
+import subprocess
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', help='-c upper | lower', required=True)
+args = vars(parser.parse_args())
+
+
+tocase =  args['c']
+
+
+path = '/var/data/bbg/'
+#path = '/var/data/bbg.SAVE/'
+
+mfiles = set(os.listdir(path)) 
+
+for file in mfiles:
+#  print path + file
+  mystr = file
+  mystrup = mystr.upper()
+#  print mystrup
+  mystrlow = mystr.lower()
+#  print mystrlow
+  if tocase == 'upper':
+#    print 'UPPER'
+    cmd = 'mv ' +  path + file + ' ' + path + mystrup 
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True)
+    (out,err) = proc.communicate()
+
+  if tocase == 'lower':
+#    print 'LOWER'
+    cmd = 'mv ' +  path + file + ' ' + path + mystrlow
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True)
+    (out,err) = proc.communicate()
