@@ -5,7 +5,7 @@ import subprocess
 import datetime
 import re
 
-path = '/bigdata.SAVE/'
+path = '/bigdata/'
 pathout = '/var/backup/bigdata/'
 
 msgpathout = '/var/log/bigdata-backup.log'

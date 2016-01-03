@@ -21,7 +21,8 @@ count = 1
 while count <= int(usercount):
     passwd = username
     nuser = username+str(count)
-    cmd = 'useradd ' + '-p ' + passwd + ' ' + nuser
+    cmd = 'useradd ' + '-p ' + passwd +  ' -m ' +  ' ' + nuser
+#    cmd = 'useradd ' + '-p ' + passwd + '-d /home/' + nuser +  ' -m ' +  ' ' + nuser
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,shell=True)
     (out,err) = proc.communicate()
     count = count + 1
